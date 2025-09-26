@@ -3,59 +3,53 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SparkPacket Images</title>
+  <title>Image Buttons</title>
   <style>
     body {
-      font-family: 'Press Start 2P', sans-serif;
-      background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
-      color: white;
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #1e1e1e, #333);
+      color: #fff;
       display: flex;
       flex-direction: column;
       align-items: center;
       padding: 50px;
     }
     h1 {
-      margin-bottom: 40px;
+      margin-bottom: 30px;
+    }
+    .button-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
     }
     button {
-      font-family: 'Press Start 2P', sans-serif;
-      background: #444;
-      color: white;
-      border: none;
       padding: 15px 25px;
-      margin: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
       cursor: pointer;
-      transition: background 0.2s;
+      background-color: #555;
+      color: white;
+      transition: background-color 0.2s;
     }
     button:hover {
-      background: #666;
+      background-color: #888;
     }
   </style>
 </head>
 <body>
   <h1>Image Gallery</h1>
-
-  <!-- Buttons will go here -->
-  <div id="buttons-container"></div>
+  <div class="button-container">
+    <button onclick="openImage('./banan.jpeg')">BANAN</button>
+    <button onclick="openImage('./swctw.png')">something wicked comes this way</button>
+    <!-- Add more buttons as needed -->
+  </div>
 
   <script>
-    // List of images (just the filename without the leading slash)
-    const images = [
-      "swctw.png",
-      "banan.jpeg",
-    ];
-
-    const container = document.getElementById("buttons-container");
-
-    images.forEach(image => {
-      const button = document.createElement("button");
-      button.textContent = image;
-      button.addEventListener("click", () => {
-        // Change URL to /image-name and open the image
-        window.location.href = `/${image}`;
-      });
-      container.appendChild(button);
-    });
+    function openImage(src) {
+      window.open(src, '_blank'); // Opens the image in a new tab
+    }
   </script>
 </body>
 </html>
