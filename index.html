@@ -23,33 +23,62 @@
       gap: 15px;
       justify-content: center;
     }
-    button {
-      padding: 15px 25px;
-      font-size: 16px;
+    .image-button {
+      position: relative;
+      width: 200px;
+      height: 120px;
       border: none;
-      border-radius: 8px;
+      border-radius: 12px;
       cursor: pointer;
-      background-color: #555;
+      overflow: hidden;
       color: white;
-      transition: background-color 0.2s;
+      font-size: 16px;
+      font-weight: bold;
+      text-shadow: 1px 1px 3px black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-size: cover;
+      background-position: center;
+      transition: transform 0.2s;
     }
-    button:hover {
-      background-color: #888;
+    .image-button:hover {
+      transform: scale(1.05);
     }
   </style>
 </head>
 <body>
   <h1>Image Gallery</h1>
-  <div class="button-container">
-    <button onclick="openImage('images/banan.jpeg')">BANAN</button>
-    <button onclick="openImage('images/swctw.png')">something wicked comes this way</button>
-    <!-- Add more buttons as needed -->
-  </div>
+  <div class="button-container" id="buttonContainer"></div>
 
   <script>
-    function openImage(src) {
-      window.open(src, '_blank'); // Opens the image in a new tab
+    const user = "sparkpacket";   // your GitHub username
+    const repo = "images";        // the repo that holds your files
+    const folderPath = "";        // root of the repo (not inside a subfolder)
+
+    async function loadImages() {
+      const url = `https://api.github.com/repos/${user}/${repo}/contents/${folderPath}`;
+      const response = await fetch(url);
+      const files = await response.json();
+
+      const container = document.getElementById("buttonContainer");
+
+      files
+        .filter(file => !file.name.endsWith(".html")) // skip html
+        .forEach(file => {
+          const btn = document.createElement("button");
+          btn.className = "image-button";
+          btn.style.backgroundImage = `url('${file.download_url}')`;
+
+          const text = file.name.split(".")[0].replace(/[_-]/g, " ");
+          btn.textContent = text.toUpperCase();
+
+          btn.onclick = () => window.open(file.download_url, "_blank");
+          container.appendChild(btn);
+        });
     }
+
+    loadImages();
   </script>
 </body>
 </html>
