@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Image Buttons</title>
+  <title>Media Buttons</title>
   <style>
     body {
       font-family: 'Arial', sans-serif;
@@ -23,7 +23,7 @@
       gap: 15px;
       justify-content: center;
     }
-    .image-button {
+    .media-button {
       position: relative;
       width: 200px;
       height: 120px;
@@ -42,21 +42,34 @@
       background-position: center;
       transition: transform 0.2s;
     }
-    .image-button:hover {
+    .media-button:hover {
       transform: scale(1.05);
+    }
+    .media-button video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+    .media-button span {
+      position: relative;
+      z-index: 1;
     }
   </style>
 </head>
 <body>
-  <h1>Image Gallery</h1>
+  <h1>Media Gallery</h1>
   <div class="button-container" id="buttonContainer"></div>
 
   <script>
     const user = "sparkpacket";   // your GitHub username
     const repo = "images";        // the repo that holds your files
-    const folderPath = "";        // root of the repo (not inside a subfolder)
+    const folderPath = "";        // root of the repo
 
-    async function loadImages() {
+    async function loadMedia() {
       const url = `https://api.github.com/repos/${user}/${repo}/contents/${folderPath}`;
       const response = await fetch(url);
       const files = await response.json();
@@ -66,19 +79,37 @@
       files
         .filter(file => !file.name.endsWith(".html")) // skip html
         .forEach(file => {
+          const ext = file.name.split(".").pop().toLowerCase();
+          const path = `/${file.name}`; // GitHub Pages serves directly
+
           const btn = document.createElement("button");
-          btn.className = "image-button";
-          btn.style.backgroundImage = `url('${file.download_url}')`;
+          btn.className = "media-button";
 
-          const text = file.name.split(".")[0].replace(/[_-]/g, " ");
-          btn.textContent = text.toUpperCase();
+          // If video
+          if (["mp4", "webm", "mov"].includes(ext)) {
+            const vid = document.createElement("video");
+            vid.src = path;
+            vid.autoplay = true;
+            vid.loop = true;
+            vid.muted = true;
+            btn.appendChild(vid);
+          } else {
+            // If image
+            btn.style.backgroundImage = `url('${path}')`;
+          }
 
-          btn.onclick = () => window.open(file.download_url, "_blank");
+          const text = document.createElement("span");
+          text.textContent = file.name.split(".")[0].replace(/[_-]/g, " ").toUpperCase();
+          btn.appendChild(text);
+
+          // Click opens in new tab
+          btn.onclick = () => window.open(path, "_blank");
+
           container.appendChild(btn);
         });
     }
 
-    loadImages();
+    loadMedia();
   </script>
 </body>
 </html>
