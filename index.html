@@ -64,7 +64,7 @@
       const container = document.getElementById("buttonContainer");
 
       files
-        .filter(file => !file.name.startsWith("code/")) // skip code file (:
+        .filter(file => !file.name.endsWith(".html"))
         .forEach(file => {
           const btn = document.createElement("button");
           btn.className = "image-button";
